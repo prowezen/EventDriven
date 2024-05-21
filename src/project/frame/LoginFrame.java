@@ -1,7 +1,7 @@
 package project.frame;
 
 import project.ProjectEvent;
-import project.frame.UserDashboardFrame;
+import project.EventManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,9 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LoginFrame extends JFrame {
-    public LoginFrame(ProjectEvent projectEvent) {
+    public LoginFrame(ProjectEvent projectEvent, EventManager eventManager) {
         setTitle("Login");
-        setSize(400, 210);
+        setSize(400, 250);  // Adjusted size to accommodate the new button
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -39,7 +39,7 @@ public class LoginFrame extends JFrame {
                     if (rs.next()) {
                         int userId = rs.getInt("id");
                         String role = rs.getString("role");
-                        new UserDashboardFrame(projectEvent, userId, role).setVisible(true);
+                        new UserDashboardFrame(projectEvent, userId, role, eventManager).setVisible(true);
                         dispose();
                     } else {
                         JOptionPane.showMessageDialog(LoginFrame.this, "Invalid credentials");
@@ -57,6 +57,19 @@ public class LoginFrame extends JFrame {
         loginPanel.add(new JLabel());
         loginPanel.add(loginButton);
 
+        JButton registerButton = new JButton("Don't have an account? Register");
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new RegisterFrame(projectEvent, eventManager).setVisible(true);
+                dispose();
+            }
+        });
+
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.add(registerButton);
+
         add(loginPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
     }
 }

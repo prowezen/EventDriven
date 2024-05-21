@@ -1,7 +1,7 @@
 package project.frame;
 
 import project.ProjectEvent;
-import project.frame.UserDashboardFrame;
+import project.EventManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,9 +10,9 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 public class RegisterFrame extends JFrame {
-    public RegisterFrame(ProjectEvent projectEvent) {
+    public RegisterFrame(ProjectEvent projectEvent, EventManager eventManager) {
         setTitle("Register");
-        setSize(400, 300);
+        setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -44,7 +44,7 @@ public class RegisterFrame extends JFrame {
                             (String) roleComboBox.getSelectedItem()
                     );
                     JOptionPane.showMessageDialog(RegisterFrame.this, "Registration Successful!");
-                    new LoginFrame(projectEvent).setVisible(true);
+                    new LoginFrame(projectEvent, eventManager).setVisible(true);
                     dispose();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
