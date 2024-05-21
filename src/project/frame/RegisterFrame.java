@@ -1,7 +1,7 @@
 package project.frame;
 
 import project.ProjectEvent;
-import project.UserDashboardFrame;
+import project.frame.UserDashboardFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class RegisterFrame extends JFrame {
     public RegisterFrame(ProjectEvent projectEvent) {
         setTitle("Register");
-        setSize(400, 400);
+        setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 

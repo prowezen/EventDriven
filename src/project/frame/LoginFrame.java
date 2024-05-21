@@ -1,7 +1,7 @@
 package project.frame;
 
 import project.ProjectEvent;
-import project.UserDashboardFrame;
+import project.frame.UserDashboardFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class LoginFrame extends JFrame {
     public LoginFrame(ProjectEvent projectEvent) {
         setTitle("Login");
-        setSize(400, 300);
+        setSize(400, 210);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
