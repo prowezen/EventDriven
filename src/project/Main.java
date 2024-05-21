@@ -3,6 +3,8 @@ package project;
 import java.sql.SQLException;
 
 import javax.swing.*;
+import project.frame.LoginFrame;
+import project.frame.RegisterFrame;
 
 public class Main {
     public static void main(String[] args) {
@@ -52,4 +54,3 @@ public class Main {
         }
     }
 }
-
