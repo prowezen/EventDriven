@@ -11,37 +11,62 @@ public class ProjectEvent {
         this.connection = DatabaseConnection.getConnection();
     }
 
+    // Methods that use EventManager
     public void addUser(String name, String email, String password, String role) throws SQLException {
         String query = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, name);
-            stmt.setString(2, email);
-            stmt.setString(3, password);
-            stmt.setString(4, role);
-            stmt.executeUpdate();
-        }
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, name);
+        stmt.setString(2, email);
+        stmt.setString(3, password);
+        stmt.setString(4, role);
+        stmt.executeUpdate();
+        eventManager.notify("userAdded", null);
     }
 
     public void addProject(String title, String description, int organizerId) throws SQLException {
         String query = "INSERT INTO projects (title, description, organizer_id) VALUES (?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, title);
-            stmt.setString(2, description);
-            stmt.setInt(3, organizerId);
-            stmt.executeUpdate();
-        }
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, title);
+        stmt.setString(2, description);
+        stmt.setInt(3, organizerId);
+        stmt.executeUpdate();
+        eventManager.notify("projectAdded", null);
     }
 
     public void assignRequirement(int projectId, int userId, String title, String description, String dueDate) throws SQLException {
-        String query = "INSERT INTO requirements (project_id, user_id, title, description, due_date) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, projectId);
-            stmt.setInt(2, userId);
-            stmt.setString(3, title);
-            stmt.setString(4, description);
-            stmt.setString(5, dueDate);
-            stmt.executeUpdate();
-        }
+        String query = "INSERT INTO requirements (project_id, user_id, title, description, due_date, status) VALUES (?, ?, ?, ?, ?, 'pending')";
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setInt(1, projectId);
+        stmt.setInt(2, userId);
+        stmt.setString(3, title);
+        stmt.setString(4, description);
+        stmt.setString(5, dueDate);
+        stmt.executeUpdate();
+        eventManager.notify("requirementAssigned", null);
+    }
+
+    public void uploadFile(int userId, String requirementTitle, String filePath) throws SQLException {
+        String query = "UPDATE requirements SET file_path = ?, status = 'submitted' WHERE user_id = ? AND title = ?";
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, filePath);
+        stmt.setInt(2, userId);
+        stmt.setString(3, requirementTitle);
+        stmt.executeUpdate();
+        eventManager.notify("fileUploaded", null);
+    }
+
+    // Methods that do not use EventManager
+    public ResultSet getUsers() throws SQLException {
+        String query = "SELECT * FROM users";
+        Statement stmt = connection.createStatement();
+        return stmt.executeQuery(query);
+    }
+
+    public ResultSet getUserByName(String name) throws SQLException {
+        String query = "SELECT * FROM users WHERE name = ?";
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setString(1, name);
+        return stmt.executeQuery();
     }
 
     public ResultSet getUserByEmailAndPassword(String email, String password) throws SQLException {
@@ -52,23 +77,17 @@ public class ProjectEvent {
         return stmt.executeQuery();
     }
 
-    public ResultSet getUserByName(String name) throws SQLException {
-        String query = "SELECT * FROM users WHERE name = ?";
-        PreparedStatement stmt = connection.prepareStatement(query);
-        stmt.setString(1, name);
-        return stmt.executeQuery();
-    }
-
-    public ResultSet getUsers() throws SQLException {
-        String query = "SELECT * FROM users";
-        Statement stmt = connection.createStatement();
-        return stmt.executeQuery(query);
-    }
-
     public ResultSet getProjectsByOrganizerId(int organizerId) throws SQLException {
         String query = "SELECT * FROM projects WHERE organizer_id = ?";
         PreparedStatement stmt = connection.prepareStatement(query);
         stmt.setInt(1, organizerId);
+        return stmt.executeQuery();
+    }
+
+    public ResultSet getProjectById(int projectId) throws SQLException {
+        String query = "SELECT * FROM projects WHERE id = ?";
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setInt(1, projectId);
         return stmt.executeQuery();
     }
 
@@ -79,22 +98,8 @@ public class ProjectEvent {
         return stmt.executeQuery();
     }
 
-    public ResultSet getUserById(int userId) throws SQLException {
-        String query = "SELECT * FROM users WHERE id = ?";
-        PreparedStatement stmt = connection.prepareStatement(query);
-        stmt.setInt(1, userId);
-        return stmt.executeQuery();
-    }
-
     public ResultSet getRequirementsByProjectId(int projectId) throws SQLException {
         String query = "SELECT * FROM requirements WHERE project_id = ?";
-        PreparedStatement stmt = connection.prepareStatement(query);
-        stmt.setInt(1, projectId);
-        return stmt.executeQuery();
-    }
-
-    public ResultSet getProjectById(int projectId) throws SQLException {
-        String query = "SELECT * FROM projects WHERE id = ?";
         PreparedStatement stmt = connection.prepareStatement(query);
         stmt.setInt(1, projectId);
         return stmt.executeQuery();
@@ -107,14 +112,10 @@ public class ProjectEvent {
         return stmt.executeQuery();
     }
 
-    public void uploadFile(int userId, String requirementTitle, String filePath) throws SQLException {
-        String query = "UPDATE requirements SET file_path = ?, status = 'submitted' WHERE user_id = ? AND title = ?";
+    public ResultSet getUserById(int userId) throws SQLException {
+        String query = "SELECT * FROM users WHERE id = ?";
         PreparedStatement stmt = connection.prepareStatement(query);
-        stmt.setString(1, filePath);
-        stmt.setInt(2, userId);
-        stmt.setString(3, requirementTitle);
-        stmt.executeUpdate();
+        stmt.setInt(1, userId);
+        return stmt.executeQuery();
     }
-    
-    
 }
