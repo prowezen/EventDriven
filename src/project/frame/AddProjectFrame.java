@@ -39,6 +39,16 @@ public class AddProjectFrame extends JFrame {
         }
 
         JButton addProjectButton = new JButton("Add Project");
+        
+        addProjectPanel.add(new JLabel("Project Title:"));
+        addProjectPanel.add(projectTitleField);
+        addProjectPanel.add(new JLabel("Project Description:"));
+        addProjectPanel.add(new JScrollPane(projectDescriptionField));
+        addProjectPanel.add(new JLabel("Organizer:"));
+        addProjectPanel.add(organizerComboBox);
+        addProjectPanel.add(addProjectButton);
+
+        add(addProjectPanel, BorderLayout.CENTER);
 
         addProjectButton.addActionListener(new ActionListener() {
             @Override
@@ -67,14 +77,6 @@ public class AddProjectFrame extends JFrame {
             }
         });
 
-        addProjectPanel.add(new JLabel("Project Title:"));
-        addProjectPanel.add(projectTitleField);
-        addProjectPanel.add(new JLabel("Project Description:"));
-        addProjectPanel.add(new JScrollPane(projectDescriptionField));
-        addProjectPanel.add(new JLabel("Organizer:"));
-        addProjectPanel.add(organizerComboBox);
-        addProjectPanel.add(addProjectButton);
-
-        add(addProjectPanel, BorderLayout.CENTER);
+        
     }
 }

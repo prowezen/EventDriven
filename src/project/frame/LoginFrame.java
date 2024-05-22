@@ -13,10 +13,11 @@ import java.sql.SQLException;
 public class LoginFrame extends JFrame {
     public LoginFrame(ProjectEvent projectEvent, EventManager eventManager) {
         setTitle("Login");
-        setSize(400, 250);  // Adjusted size to accommodate the new button
+        setSize(400, 250);  
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
+        //Frame Components
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(new GridLayout(4, 2, 10, 10));
 
@@ -27,7 +28,27 @@ public class LoginFrame extends JFrame {
         JPasswordField passwordField = new JPasswordField(20);
 
         JButton loginButton = new JButton("Login");
+        
+        JButton registerButton = new JButton("Don't have an account? Register");
 
+        JPanel bottomPanel = new JPanel();
+        
+        
+      //Add Components to Panel
+        loginPanel.add(emailLabel);
+        loginPanel.add(emailField);
+        loginPanel.add(passwordLabel);
+        loginPanel.add(passwordField);
+        loginPanel.add(new JLabel());
+        loginPanel.add(loginButton);
+        bottomPanel.add(registerButton);
+
+        add(loginPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
+        
+        
+        
+      //Action Listener
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -50,14 +71,7 @@ public class LoginFrame extends JFrame {
             }
         });
 
-        loginPanel.add(emailLabel);
-        loginPanel.add(emailField);
-        loginPanel.add(passwordLabel);
-        loginPanel.add(passwordField);
-        loginPanel.add(new JLabel());
-        loginPanel.add(loginButton);
-
-        JButton registerButton = new JButton("Don't have an account? Register");
+    
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -66,10 +80,7 @@ public class LoginFrame extends JFrame {
             }
         });
 
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.add(registerButton);
-
-        add(loginPanel, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
+        
+        
     }
 }

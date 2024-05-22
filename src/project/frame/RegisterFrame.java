@@ -12,10 +12,11 @@ import java.sql.SQLException;
 public class RegisterFrame extends JFrame {
     public RegisterFrame(ProjectEvent projectEvent, EventManager eventManager) {
         setTitle("Register");
-        setSize(400, 400);
+        setSize(400, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-
+        
+        //Frame Components
         JPanel registerPanel = new JPanel();
         registerPanel.setLayout(new GridLayout(6, 2, 10, 10));
 
@@ -32,7 +33,23 @@ public class RegisterFrame extends JFrame {
         JComboBox<String> roleComboBox = new JComboBox<>(new String[]{"organizer", "contributor"});
 
         JButton registerButton = new JButton("Register");
+        
+        //Add Components to Panel
+        registerPanel.add(nameLabel);
+        registerPanel.add(nameField);
+        registerPanel.add(emailLabel);
+        registerPanel.add(emailField);
+        registerPanel.add(passwordLabel);
+        registerPanel.add(passwordField);
+        registerPanel.add(roleLabel);
+        registerPanel.add(roleComboBox);
+        registerPanel.add(new JLabel());
+        registerPanel.add(registerButton);
 
+        add(registerPanel, BorderLayout.CENTER);
+
+        
+        //Action Listener
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -52,17 +69,6 @@ public class RegisterFrame extends JFrame {
             }
         });
 
-        registerPanel.add(nameLabel);
-        registerPanel.add(nameField);
-        registerPanel.add(emailLabel);
-        registerPanel.add(emailField);
-        registerPanel.add(passwordLabel);
-        registerPanel.add(passwordField);
-        registerPanel.add(roleLabel);
-        registerPanel.add(roleComboBox);
-        registerPanel.add(new JLabel());
-        registerPanel.add(registerButton);
-
-        add(registerPanel, BorderLayout.CENTER);
+        
     }
 }

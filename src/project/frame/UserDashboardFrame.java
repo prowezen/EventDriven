@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.function.Consumer;
 
 public class UserDashboardFrame extends JFrame {
     private int userId;
@@ -81,7 +82,34 @@ public class UserDashboardFrame extends JFrame {
         centerPanel.add(Box.createVerticalGlue());
 
         add(centerPanel, BorderLayout.CENTER);
+
+        // Subscribe to the events
+        eventManager.subscribe("userAdded", onUserAdded);
+        eventManager.subscribe("projectAdded", onProjectAdded);
+        eventManager.subscribe("requirementAssigned", onRequirementAssigned);
+        eventManager.subscribe("fileUploaded", onFileUploaded);
     }
+
+    // Event handlers
+    private final Consumer<Object> onUserAdded = (data) -> {
+        // Handle the user added event (e.g., refresh user list)
+        System.out.println("User added event received in UserDashboardFrame");
+    };
+
+    private final Consumer<Object> onProjectAdded = (data) -> {
+        // Handle the project added event (e.g., refresh project list)
+        System.out.println("Project added event received in UserDashboardFrame");
+    };
+
+    private final Consumer<Object> onRequirementAssigned = (data) -> {
+        // Handle the requirement assigned event (e.g., refresh requirements)
+        System.out.println("Requirement assigned event received in UserDashboardFrame");
+    };
+
+    private final Consumer<Object> onFileUploaded = (data) -> {
+        // Handle the file uploaded event (e.g., update file status)
+        System.out.println("File uploaded event received in UserDashboardFrame");
+    };
 
     private void manageOrganizedProjects(ProjectEvent projectEvent, EventManager eventManager) {
         JFrame frame = new JFrame("Organized Projects");

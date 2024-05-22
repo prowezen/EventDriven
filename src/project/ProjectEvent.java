@@ -54,7 +54,10 @@ public class ProjectEvent {
         stmt.executeUpdate();
         eventManager.notify("fileUploaded", null);
     }
-
+    //
+    //--------------------------------------------------------------------------------------------------
+    //
+    //
     // Methods that do not use EventManager
     public ResultSet getUsers() throws SQLException {
         String query = "SELECT * FROM users";
