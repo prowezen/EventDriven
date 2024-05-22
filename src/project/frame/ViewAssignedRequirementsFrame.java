@@ -1,6 +1,7 @@
 package project.frame;
 
 import project.ProjectEvent;
+import project.EventManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,10 +14,12 @@ import javax.swing.table.DefaultTableModel;
 public class ViewAssignedRequirementsFrame extends JFrame {
     private int userId;
     private ProjectEvent projectEvent;
+    private EventManager eventManager;
 
-    public ViewAssignedRequirementsFrame(ProjectEvent projectEvent, int userId) {
+    public ViewAssignedRequirementsFrame(ProjectEvent projectEvent, int userId, EventManager eventManager) {
         this.userId = userId;
         this.projectEvent = projectEvent;
+        this.eventManager = eventManager;
         setTitle("View Assigned Requirements");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -59,7 +62,7 @@ public class ViewAssignedRequirementsFrame extends JFrame {
                 int selectedRow = requirementsTable.getSelectedRow();
                 if (selectedRow != -1) {
                     String requirementTitle = (String) requirementsTableModel.getValueAt(selectedRow, 0);
-                    new UploadFileFrame(projectEvent, userId, requirementTitle).setVisible(true);
+                    new UploadFileFrame(projectEvent, userId, requirementTitle, eventManager).setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(ViewAssignedRequirementsFrame.this, "Please select a requirement to upload the file");
                 }
@@ -70,5 +73,32 @@ public class ViewAssignedRequirementsFrame extends JFrame {
         panel.add(uploadFileButton, BorderLayout.SOUTH);
 
         add(panel, BorderLayout.CENTER);
+
+        // Subscribe to file uploaded event
+        eventManager.subscribe("fileUploaded", data -> {
+            // Refresh the table after a file is uploaded
+            loadRequirements(requirementsTableModel);
+        });
+    }
+
+    private void loadRequirements(DefaultTableModel requirementsTableModel) {
+        requirementsTableModel.setRowCount(0); // Clear existing data
+        try {
+            ResultSet rs = projectEvent.getRequirementsByUserId(userId);
+            while (rs.next()) {
+                String requirement = rs.getString("title");
+                ResultSet projectRs = projectEvent.getProjectById(rs.getInt("project_id"));
+                String project = "";
+                if (projectRs.next()) {
+                    project = projectRs.getString("title");
+                }
+                String status = rs.getString("status");
+                String dueDate = rs.getString("due_date");
+
+                requirementsTableModel.addRow(new Object[]{requirement, project, status, dueDate});
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 }

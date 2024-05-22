@@ -2,28 +2,45 @@ package project.frame;
 
 import com.toedter.calendar.JDateChooser;
 import project.ProjectEvent;
+import project.EventManager;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import javax.swing.table.DefaultTableModel;
+import java.io.File;
+import java.io.IOException;
 
 public class AssignRequirementFrame extends JFrame {
     private int projectId;
     private ProjectEvent projectEvent;
+    private EventManager eventManager;
+    private JTable requirementsTable;
+    private DefaultTableModel requirementsTableModel;
 
-    public AssignRequirementFrame(ProjectEvent projectEvent, int projectId) {
+    public AssignRequirementFrame(ProjectEvent projectEvent, int projectId, EventManager eventManager) {
         this.projectId = projectId;
         this.projectEvent = projectEvent;
+        this.eventManager = eventManager;
         setTitle("Assign Requirement");
-        setSize(600, 400);
+        setSize(800, 600);  // Adjusted size to accommodate new button
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
+        // Subscribe to requirement updates
+        eventManager.subscribe("requirementUpdated", data -> {
+            loadRequirements();
+        });
+
+        initializeComponents();
+        loadRequirements();
+    }
+
+    private void initializeComponents() {
         JPanel assignRequirementPanel = new JPanel();
         assignRequirementPanel.setLayout(new GridLayout(7, 2, 10, 10));
 
@@ -65,6 +82,8 @@ public class AssignRequirementFrame extends JFrame {
                                     dueDate
                             );
                             JOptionPane.showMessageDialog(AssignRequirementFrame.this, "Requirement Assigned Successfully!");
+                            // Notify listeners about the new assignment
+                            eventManager.notify("requirementUpdated", null);
                             dispose();
                         }
                     } else {
@@ -89,16 +108,48 @@ public class AssignRequirementFrame extends JFrame {
 
         add(assignRequirementPanel, BorderLayout.NORTH);
 
-        // Add a table to display requirements and their status
         JPanel viewRequirementsPanel = new JPanel();
         viewRequirementsPanel.setLayout(new BorderLayout());
 
-        JTable requirementsTable = new JTable();
-        DefaultTableModel requirementsTableModel = new DefaultTableModel(
-            new Object[]{"Requirement", "Assigned To", "Status", "Due Date"}, 0
+        requirementsTable = new JTable();
+        requirementsTableModel = new DefaultTableModel(
+            new Object[]{"Requirement", "Assigned To", "Status", "Due Date", "File Path"}, 0
         );
+        requirementsTable.setModel(requirementsTableModel);
+        requirementsTable.removeColumn(requirementsTable.getColumnModel().getColumn(4)); // Hide file path column
 
-        // Populate the table with requirements of the selected project
+        JScrollPane requirementsTableScrollPane = new JScrollPane(requirementsTable);
+
+        JButton viewFileButton = new JButton("View File");
+        viewFileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = requirementsTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    String filePath = (String) requirementsTableModel.getValueAt(selectedRow, 4);
+                    if (filePath != null && !filePath.isEmpty()) {
+                        try {
+                            Desktop.getDesktop().open(new File(filePath));
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(AssignRequirementFrame.this, "Unable to open file.");
+                            ex.printStackTrace();
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(AssignRequirementFrame.this, "No file uploaded for this requirement.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(AssignRequirementFrame.this, "Please select a requirement to view the file.");
+                }
+            }
+        });
+
+        viewRequirementsPanel.add(requirementsTableScrollPane, BorderLayout.CENTER);
+        viewRequirementsPanel.add(viewFileButton, BorderLayout.SOUTH);
+        add(viewRequirementsPanel, BorderLayout.CENTER);
+    }
+
+    private void loadRequirements() {
+        requirementsTableModel.setRowCount(0); // Clear existing data
         try {
             ResultSet rs = projectEvent.getRequirementsByProjectId(projectId);
             while (rs.next()) {
@@ -110,17 +161,12 @@ public class AssignRequirementFrame extends JFrame {
                 }
                 String status = rs.getString("status");
                 String dueDate = rs.getString("due_date");
+                String filePath = rs.getString("file_path");
 
-                requirementsTableModel.addRow(new Object[]{requirement, assignedTo, status, dueDate});
+                requirementsTableModel.addRow(new Object[]{requirement, assignedTo, status, dueDate, filePath});
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
-        requirementsTable.setModel(requirementsTableModel);
-        JScrollPane requirementsTableScrollPane = new JScrollPane(requirementsTable);
-
-        viewRequirementsPanel.add(requirementsTableScrollPane, BorderLayout.CENTER);
-        add(viewRequirementsPanel, BorderLayout.CENTER);
     }
 }

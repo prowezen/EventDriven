@@ -1,6 +1,7 @@
 package project.frame;
 
 import project.ProjectEvent;
+import project.EventManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,11 +14,13 @@ public class UploadFileFrame extends JFrame {
     private int userId;
     private String requirementTitle;
     private ProjectEvent projectEvent;
+    private EventManager eventManager;
 
-    public UploadFileFrame(ProjectEvent projectEvent, int userId, String requirementTitle) {
+    public UploadFileFrame(ProjectEvent projectEvent, int userId, String requirementTitle, EventManager eventManager) {
         this.userId = userId;
         this.requirementTitle = requirementTitle;
         this.projectEvent = projectEvent;
+        this.eventManager = eventManager;
         setTitle("Upload File");
         setSize(400, 200);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -39,6 +42,7 @@ public class UploadFileFrame extends JFrame {
                     try {
                         projectEvent.uploadFile(userId, requirementTitle, selectedFile.getAbsolutePath());
                         JOptionPane.showMessageDialog(UploadFileFrame.this, "File Uploaded Successfully!");
+                        eventManager.notify("fileUploaded", null);
                         dispose();
                     } catch (SQLException ex) {
                         ex.printStackTrace();

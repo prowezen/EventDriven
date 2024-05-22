@@ -1,6 +1,7 @@
 package project.frame;
 
 import project.ProjectEvent;
+import project.EventManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.sql.SQLException;
 public class AddProjectFrame extends JFrame {
     private int userId;
 
-    public AddProjectFrame(ProjectEvent projectEvent, int userId) {
+    public AddProjectFrame(ProjectEvent projectEvent, int userId, EventManager eventManager) {
         this.userId = userId;
         setTitle("Add Project");
         setSize(400, 300);
@@ -54,6 +55,7 @@ public class AddProjectFrame extends JFrame {
                                     organizerId
                             );
                             JOptionPane.showMessageDialog(AddProjectFrame.this, "Project Added Successfully!");
+                            eventManager.notify("projectAdded", null);
                             dispose();
                         }
                     } else {
