@@ -26,20 +26,21 @@ public class AssignRequirementFrame extends JFrame {
         this.projectId = projectId;
         this.projectEvent = projectEvent;
         this.eventManager = eventManager;
-        setTitle("Assign Requirement");
-        setSize(800, 600);  // Adjusted size to accommodate new button
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
+        setTitle("Assign Requirement");  
+        setSize(800, 600);  // Set the size of the frame
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+        setResizable(false);  
 
         // Subscribe to requirement updates
         eventManager.subscribe("requirementUpdated", data -> {
-            loadRequirements();
+            loadRequirements();  // Reload requirements when an update occurs
         });
 
-        initializeComponents();
-        loadRequirements();
+        initializeComponents();  // Initialize UI components
+        loadRequirements();  // Load existing requirements
     }
 
+    // Initialize UI components
     private void initializeComponents() {
         JPanel assignRequirementPanel = new JPanel();
         assignRequirementPanel.setLayout(new GridLayout(7, 2, 10, 10));
@@ -82,8 +83,7 @@ public class AssignRequirementFrame extends JFrame {
                                     dueDate
                             );
                             JOptionPane.showMessageDialog(AssignRequirementFrame.this, "Requirement Assigned Successfully!");
-                            // Notify listeners about the new assignment
-                            eventManager.notify("requirementUpdated", null);
+                            eventManager.notify("requirementUpdated", null);  // Notify listeners about the new assignment
                             dispose();
                         }
                     } else {
@@ -95,6 +95,7 @@ public class AssignRequirementFrame extends JFrame {
             }
         });
 
+        // Add components to the assignRequirementPanel
         assignRequirementPanel.add(new JLabel("User:"));
         assignRequirementPanel.add(userComboBox);
         assignRequirementPanel.add(new JLabel("Requirement Title:"));
@@ -108,6 +109,7 @@ public class AssignRequirementFrame extends JFrame {
 
         add(assignRequirementPanel, BorderLayout.NORTH);
 
+        // View requirements panel
         JPanel viewRequirementsPanel = new JPanel();
         viewRequirementsPanel.setLayout(new BorderLayout());
 
@@ -116,7 +118,7 @@ public class AssignRequirementFrame extends JFrame {
             new Object[]{"Requirement", "Assigned To", "Status", "Due Date", "File Path"}, 0
         );
         requirementsTable.setModel(requirementsTableModel);
-        requirementsTable.removeColumn(requirementsTable.getColumnModel().getColumn(4)); // Hide file path column
+        requirementsTable.removeColumn(requirementsTable.getColumnModel().getColumn(4));  // Hide file path column
 
         JScrollPane requirementsTableScrollPane = new JScrollPane(requirementsTable);
 
@@ -148,8 +150,9 @@ public class AssignRequirementFrame extends JFrame {
         add(viewRequirementsPanel, BorderLayout.CENTER);
     }
 
+    // Load requirements from the database
     private void loadRequirements() {
-        requirementsTableModel.setRowCount(0); // Clear existing data
+        requirementsTableModel.setRowCount(0);  // Clear existing data
         try {
             ResultSet rs = projectEvent.getRequirementsByProjectId(projectId);
             while (rs.next()) {

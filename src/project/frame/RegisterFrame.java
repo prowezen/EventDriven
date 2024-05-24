@@ -48,27 +48,27 @@ public class RegisterFrame extends JFrame {
 
         add(registerPanel, BorderLayout.CENTER);
 
-        
-        //Action Listener
+        // action listener for register button
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                    // Add the new user to the database
                     projectEvent.addUser(
                             nameField.getText(),
                             emailField.getText(),
                             new String(passwordField.getPassword()),
                             (String) roleComboBox.getSelectedItem()
                     );
+                    // Show a success message
                     JOptionPane.showMessageDialog(RegisterFrame.this, "Registration Successful!");
+                    // Open the login frame
                     new LoginFrame(projectEvent, eventManager).setVisible(true);
-                    dispose();
+                    dispose();  
                 } catch (SQLException ex) {
-                    ex.printStackTrace();
+                    ex.printStackTrace();  
                 }
             }
         });
-
-        
     }
 }
