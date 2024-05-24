@@ -68,7 +68,7 @@ public class UserDashboardFrame extends JFrame {
         return menuPanel;
     }
 
-    // Method to create a button with an action listener
+    // added a method to createButton to make this code less messy
     private JButton createButton(String text, ActionListener actionListener) {
         JButton button = new JButton(text);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -98,7 +98,7 @@ public class UserDashboardFrame extends JFrame {
             }
         });
 
-        // Populate projectComboBox
+        
         try {
             ResultSet rs = projectEvent.getProjectsByOrganizerId(userId);
             while (rs.next()) {
