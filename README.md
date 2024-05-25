@@ -25,8 +25,8 @@ This Project Management System is a Java-based application designed to help even
 
 1. **Clone the repository**:
     ```
-    git clone https://github.com/your-username/project-management-system.git
-    cd project-management-system
+    git clone https://github.com/your-username/EventDriven.git
+    cd EventDriven
     ```
 
 2. **Set up the database**:
