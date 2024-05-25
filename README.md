@@ -1,8 +1,5 @@
-Certainly! Here is the revised README file with improved formatting:
-
----
-
 # Project Management System
+ITCC 11.1B FINAL PROJECT - NATHANIEL DURANO, ILINE GUTIERREZ, FRUEE JANE JAQUILMAC, PAUL NAVIDAD
 
 ## Description
 This Project Management System is a Java-based application designed to help event organizers manage project requirements, such as project proposals and budgets. It allows users to register, log in, create projects, assign requirements to different users, upload files for each requirement, and track the status of these requirements. The system utilizes an event-driven architecture to ensure modularity and responsiveness.
