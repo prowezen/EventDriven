@@ -1,7 +1,4 @@
-Certainly! Here is the revised README file with improved formatting:
-
----
-
+ITCC 11.1B FINAL PROJECT - NATHANIEL DURANO, ILINE GUTIERREZ, FRUEE JANE JAQUILMAC, PAUL NAVIDAD
 # Project Management System
 
 ## Description
