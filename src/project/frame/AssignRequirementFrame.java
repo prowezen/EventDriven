@@ -157,7 +157,7 @@ public class AssignRequirementFrame extends JFrame {
             ResultSet rs = projectEvent.getRequirementsByProjectId(projectId);
             while (rs.next()) {
                 String requirement = rs.getString("title");
-                String assignedTo = rs.getString("user_id");
+                String assignedTo = rs.getString("assigned_user_id");
                 ResultSet userRs = projectEvent.getUserById(Integer.parseInt(assignedTo));
                 if (userRs.next()) {
                     assignedTo = userRs.getString("name");

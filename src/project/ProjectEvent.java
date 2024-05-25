@@ -38,7 +38,7 @@ public class ProjectEvent {
 
     // Assign a requirement and notify subscribers
     public void assignRequirement(int projectId, int userId, String title, String description, String dueDate) throws SQLException {
-        String query = "INSERT INTO requirements (project_id, user_id, title, description, due_date, status) VALUES (?, ?, ?, ?, ?, 'pending')";
+        String query = "INSERT INTO requirements (project_id, assigned_user_id, title, description, due_date, status) VALUES (?, ?, ?, ?, ?, 'pending')";
         PreparedStatement stmt = connection.prepareStatement(query);
         stmt.setInt(1, projectId);
         stmt.setInt(2, userId);
@@ -51,7 +51,7 @@ public class ProjectEvent {
 
     // Upload a file for a requirement and notify subscribers
     public void uploadFile(int userId, String requirementTitle, String filePath) throws SQLException {
-        String query = "UPDATE requirements SET file_path = ?, status = 'submitted' WHERE user_id = ? AND title = ?";
+        String query = "UPDATE requirements SET file_path = ?, status = 'submitted' WHERE assigned_user_id = ? AND title = ?";
         PreparedStatement stmt = connection.prepareStatement(query);
         stmt.setString(1, filePath);
         stmt.setInt(2, userId);
