@@ -121,7 +121,7 @@ public class ProjectEvent {
 
     // Retrieve requirements by user ID
     public ResultSet getRequirementsByUserId(int userId) throws SQLException {
-        String query = "SELECT * FROM requirements WHERE user_id = ?";
+        String query = "SELECT * FROM requirements WHERE assigned_user_id = ?";
         PreparedStatement stmt = connection.prepareStatement(query);
         stmt.setInt(1, userId);
         return stmt.executeQuery();
